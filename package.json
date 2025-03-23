@@ -11,14 +11,17 @@
   "license": "ISC",
   "description": "",
   "dependencies": {
+    "@tailwindcss/vite": "^4.0.15",
     "bcryptjs": "^3.0.2",
     "cookie-parser": "^1.4.7",
     "cookies-parser": "^1.2.0",
+    "daisyui": "^5.0.9",
     "dotenv": "^16.4.7",
     "express": "^4.21.2",
     "jsonwebtoken": "^9.0.2",
     "mongoose": "^8.12.1",
-    "socket.io": "^4.8.1"
+    "socket.io": "^4.8.1",
+    "tailwindcss": "^4.0.15"
   },
   "devDependencies": {
     "nodemon": "^3.1.9"
