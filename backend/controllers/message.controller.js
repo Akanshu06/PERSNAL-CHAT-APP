@@ -1,5 +1,7 @@
 import Conversation from "../models/conversation.model.js";
 import Message from "../models/message.model.js";
+import { getReceiverSocketId } from "../socket/socket.js";
+import { io } from "../socket/socket.js";
 
 export const sendMessage = async (req, res) => {
   try {
@@ -32,6 +34,11 @@ export const sendMessage = async (req, res) => {
     // await newMessage.save();
     await Promise.all([conversation.save(), newMessage.save()]);
 
+    const receiverSocketId = getReceiverSocketId(receiverId);
+    if(receiverSocketId){
+      io.to(receiverSocketId).emit("newMwssage",newMessage)
+    }
+
     res.status(201).json({ newMessage});
     
   } catch (error) {
@@ -46,18 +53,20 @@ export const getMessages = async (req, res) => {
     const {id : userToChatId } = req.params;
     const senderId = req.user._id;
    
-    let conversation = await Conversation.findOne({
+    const conversation = await Conversation.findOne({
       participants: { $all: [senderId, userToChatId] },
     }).populate("messages"); //Not ref its actual messages
 
     if(!conversation){
-      return res.status(404).json({ message: "No conversation found" });
+      return res.status(200).json([]);
     }
 
-    if(!conversation) return res.status(404).json([]);
+   // if(!conversation) return res.status(404).json([]);
 
     const messages = conversation.messages
 
+   // console.log(messages);
+    
     res.status(200).json(messages);
     
   } catch (error) {
