@@ -21,8 +21,7 @@ const useSendMessage = () => {
 			const data = await res.json();
 			if (data.error) throw new Error(data.error);
 
-			// ✅ FIX: Use Functional State Update to Prevent Stale State
-			setMessages([...messages, data]);
+			setMessages((prevMessages) => [...prevMessages, data]);
 		} catch (error) {
 			toast.error(error.message);
 		} finally {

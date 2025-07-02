@@ -26,20 +26,17 @@ export const sendMessage = async (req, res) => {
     });
     
     if(newMessage){
-      conversation.messages.push(newMessage);
+      conversation.messages.push(newMessage._id);
     }
 
-    //add socket.io here
-    // await conversation.save();
-    // await newMessage.save();
     await Promise.all([conversation.save(), newMessage.save()]);
 
     const receiverSocketId = getReceiverSocketId(receiverId);
     if(receiverSocketId){
-      io.to(receiverSocketId).emit("newMwssage",newMessage)
+      io.to(receiverSocketId).emit("newMessage", newMessage);
     }
 
-    res.status(201).json({ newMessage});
+    res.status(201).json(newMessage);
     
   } catch (error) {
     console.error(error);
@@ -55,18 +52,14 @@ export const getMessages = async (req, res) => {
    
     const conversation = await Conversation.findOne({
       participants: { $all: [senderId, userToChatId] },
-    }).populate("messages"); //Not ref its actual messages
+    }).populate("messages");
 
     if(!conversation){
       return res.status(200).json([]);
     }
 
-   // if(!conversation) return res.status(404).json([]);
-
     const messages = conversation.messages
 
-   // console.log(messages);
-    
     res.status(200).json(messages);
     
   } catch (error) {
@@ -75,5 +68,3 @@ export const getMessages = async (req, res) => {
     
   }
 }
-  
-

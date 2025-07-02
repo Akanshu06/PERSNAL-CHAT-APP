@@ -1,11 +1,9 @@
-import express from 'express';
 import mongoose from 'mongoose';
 
 const userSchema = new mongoose.Schema({
     fullname: {
         type: String,
         required: true,
-        unique: true,
         trim: true
     },
     username: {
@@ -26,7 +24,6 @@ const userSchema = new mongoose.Schema({
     profilePic: {
         type: String,
         default: "",
-        //required: true
     },
 }, {
     timestamps: true});
