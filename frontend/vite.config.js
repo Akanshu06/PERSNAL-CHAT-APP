@@ -8,12 +8,12 @@ export default defineConfig({
     port: 3000, // Frontend runs on port 3000
     proxy: {
       "/api": {
-        target: "https://persnal-chat-app.onrender.com", // ✅ Change to backend port
+        target: "https://persnal-chat-app.vercel.app/", // ✅ Change to backend port
         changeOrigin: true,
         secure: false,
       },
       "/socket.io/": {
-        target: "https://persnal-chat-app.onrender.com",
+        target: "https://persnal-chat-app.vercel.app/",
         changeOrigin: true,
         secure: false,
         ws: true,
