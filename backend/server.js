@@ -10,14 +10,14 @@ app.use(express.json());
 
 const allowedOrigins = [
   "https://persnal-chat-app.vercel.app",
-  "http://localhost:3000",
+  "http://localhost:3000"
 ];
 
 app.use(
   cors({
     origin: allowedOrigins,
-    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
-    credentials: true, // agar cookies ya headers bhejne hain to
+    methods: ["GET", "POST", "PUT", "DELETE"],
+    credentials: true, // very important if using cookies or authentication headers
   })
 );
 
