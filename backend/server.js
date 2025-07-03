@@ -2,12 +2,11 @@ import express from "express";
 import dotenv from "dotenv";
 import cookieParser from "cookie-parser";
 import { app, server } from "./socket/socket.js";
-
+import cors from "cors";
 dotenv.config();
 
 app.use(cookieParser());
 app.use(express.json());
-const cors = require("cors");
 
 const allowedOrigins = [
   "https://persnal-chat-app.vercel.app",
