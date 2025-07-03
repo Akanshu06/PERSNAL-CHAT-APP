@@ -1,44 +1,50 @@
+// socket.js
 import { Server } from "socket.io";
 import http from "http";
 import express from "express";
 
 const app = express();
-
 const server = http.createServer(app);
-// const io = new Server(server, {
-// 	cors: {
-// 		origin: [`https://persnal-chat-app.onrender.com`||"http://localhost:3000"],
-// 		methods: ["GET", "POST"],
-// 	},
-// });
 
 const io = new Server(server, {
   cors: {
     origin: ["https://persnal-chat-app.vercel.app", "http://localhost:3000"],
     methods: ["GET", "POST"],
+    credentials: true, // Use this if your app requires cookies or auth headers
   },
 });
+
+const userSocketMap = {}; // { userId: socketId }
 
 export const getReceiverSocketId = (receiverId) => {
   return userSocketMap[receiverId];
 };
 
-const userSocketMap = {}; // {userId: socketId}
-
 io.on("connection", (socket) => {
-  console.log("a user connected", socket.id);
+  console.log("✅ User connected:", socket.id);
 
+  // Extract userId from query
   const userId = socket.handshake.query.userId;
-  if (userId != "undefined") userSocketMap[userId] = socket.id;
 
-  // io.emit() is used to send events to all the connected clients
+  // Safety check to avoid undefined/null/empty values
+  if (userId) {
+    userSocketMap[userId] = socket.id;
+    console.log(`🟢 User ${userId} is online`);
+  }
+
+  // Send current online users to all clients
   io.emit("getOnlineUsers", Object.keys(userSocketMap));
-  //i have cheak this
 
-  // socket.on() is used to listen to the events. can be used both on client and server side
+  // Listen for user disconnect
   socket.on("disconnect", () => {
-    console.log("user disconnected", socket.id);
-    delete userSocketMap[userId];
+    console.log("❌ User disconnected:", socket.id);
+
+    if (userId && userSocketMap[userId]) {
+      delete userSocketMap[userId];
+      console.log(`🔴 User ${userId} went offline`);
+    }
+
+    // Update all clients with current online users
     io.emit("getOnlineUsers", Object.keys(userSocketMap));
   });
 });
