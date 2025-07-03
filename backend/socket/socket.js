@@ -7,7 +7,7 @@ const app = express();
 const server = http.createServer(app);
 const io = new Server(server, {
 	cors: {
-		origin: [`https://persnal-chat-app.vercel.app/`||"http://localhost:3000"],
+		origin: [`https://persnal-chat-app.onrender.com`||"http://localhost:3000"],
 		methods: ["GET", "POST"],
 	},
 });
