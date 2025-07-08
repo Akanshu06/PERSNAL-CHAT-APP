@@ -1,23 +1,26 @@
 import express from "express";
 import dotenv from "dotenv";
 import cookieParser from "cookie-parser";
-import { app, server } from "./socket/socket.js";
 import cors from "cors";
+import { app, server } from "./socket/socket.js";
 dotenv.config();
 
+// Apply middleware in correct order
 app.use(cookieParser());
 app.use(express.json());
 
 const allowedOrigins = [
   "https://persnal-chat-app.vercel.app",
-  "http://localhost:3000"
+  "http://localhost:3000",
+  "https://persnal-chat-app.onrender.com"
 ];
 
 app.use(
   cors({
     origin: allowedOrigins,
     methods: ["GET", "POST", "PUT", "DELETE"],
-    credentials: true, // very important if using cookies or authentication headers
+    allowedHeaders: ["Content-Type", "Authorization"],
+    credentials: true,
   })
 );
 
@@ -27,6 +30,14 @@ import usersRoutes from "./routes/users.routes.js";
 import { connectToMongoDB } from "./db/connectToMongoDB.js";
 
 const PORT = process.env.PORT || 5000;
+
+// Add a preflight handler for all routes
+app.options('*', cors({
+  origin: allowedOrigins,
+  methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+  allowedHeaders: ["Content-Type", "Authorization"],
+  credentials: true,
+}));
 
 app.use("/api/auth", authRoutes);
 app.use("/api/messages", messageRoutes);

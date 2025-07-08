@@ -12,7 +12,7 @@ const generateTokenAndSetCookie = (userId,res) => {
          // client side js cannot access the cookie XSS
          maxAge: 30 * 24 * 60 * 60 * 1000,
          httpOnly: true,
-         samesite: "strict",
+         sameSite: "none",
         secure: process.env.NODE_ENV === "production" ? true : false,
     });
 }
