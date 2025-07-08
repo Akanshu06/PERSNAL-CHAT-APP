@@ -10,7 +10,8 @@ const io = new Server(server, {
   cors: {
     origin: [
       "https://persnal-chat-app.vercel.app", 
-      "http://localhost:3000"
+      "http://localhost:3000",
+      "https://persnal-chat-app.onrender.com"
     ],
     methods: ["GET", "POST"],
     credentials: true,

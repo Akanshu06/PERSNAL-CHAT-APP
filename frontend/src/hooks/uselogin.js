@@ -9,7 +9,10 @@ const useLogin = () => {
 	const login = async (username, password) => {
 		const success = handleInputErrors(username, password);
 		if (!success) return;
+		
 		setLoading(true);
+		console.log("Attempting login to:", `${API_BASE_URL}/api/auth/login`);
+		
 		try {
 			const res = await fetch(`${API_BASE_URL}/api/auth/login`, {
 				method: "POST",
@@ -18,14 +21,21 @@ const useLogin = () => {
 				credentials: 'include'
 			});
 
-			const data = await res.json();
-			if (data.error) {
-				throw new Error(data.error);
+			console.log("Login response status:", res.status);
+			
+			if (!res.ok) {
+				const errorText = await res.text();
+				console.error("Login failed:", errorText);
+				throw new Error(`Login failed: ${res.status} ${res.statusText}`);
 			}
+
+			const data = await res.json();
+			console.log("Login successful:", data);
 
 			localStorage.setItem("chat-user", JSON.stringify(data));
 			setAuthUser(data);
 		} catch (error) {
+			console.error("Login error:", error);
 			toast.error(error.message);
 		} finally {
 			setLoading(false);
