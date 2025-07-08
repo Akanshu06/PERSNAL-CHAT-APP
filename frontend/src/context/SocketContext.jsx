@@ -15,10 +15,11 @@ export const SocketContextProvider = ({ children }) => {
 
 	useEffect(() => {
 		if (authUser) {
-			const socket = io({
+			const socket = io(import.meta.env.VITE_API_URL || "http://localhost:5000", {
 				query: {
 					userId: authUser._id,
 				},
+				withCredentials: true,
 			});
 			setSocket(socket);
 			// socket.on() is used to listen to the events. can be used both on client and server side
@@ -33,7 +34,7 @@ export const SocketContextProvider = ({ children }) => {
 				setSocket(null);
 			}
 		}
-	}, [authUser]);
+	}, [authUser, socket]);
 
 	return <SocketContext.Provider value={{ socket, onlineUsers }}>{children}</SocketContext.Provider>;
 };

@@ -8,11 +8,11 @@ import {getRandomEmoji} from "../../utils/emojis.js"
 
 const Conversations = () => {
 	const { loading, conversations } = useGetConversations();
-	// console.log("data:",conversations);
+	console.log("Conversations data:", conversations);
 	
 	return (
 		<div className='py-2 flex flex-col overflow-auto'>
-			{conversations.map((conversation, idx) => (
+			{Array.isArray(conversations) && conversations.map((conversation, idx) => (
 				<Conversation
 					key={conversation._id}
 					conversation={conversation}
@@ -20,6 +20,12 @@ const Conversations = () => {
 					lastIdx={idx === conversations.length - 1}
 				/>
 			))}
+
+			{!loading && (!conversations || conversations.length === 0) && (
+				<div className="text-center text-gray-400 py-4">
+					No conversations found
+				</div>
+			)}
 
 			{loading ? <span className='loading loading-spinner mx-auto'></span> : null}
 		</div>

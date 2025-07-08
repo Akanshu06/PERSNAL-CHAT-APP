@@ -4,22 +4,23 @@ import User from "../models/user.model.js";
 
 const protectRoute = async (req, res, next) => {
   const token = req.cookies.jwt;
-  console.log("Token from cookies:", token);   
+  console.log("Token from cookies:", token ? "Present" : "Missing");   
   
          
   if (!token) {
+    console.log("No token provided");
     return res.status(401).json({ message: "Unauthorized-no token provided" });
   }
   try {
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
-    console.log("Decoded token:", decoded);
+    console.log("Token decoded successfully for user:", decoded.userId);
     
     if (!decoded) {
       return res.status(401).json({ message: "Unauthorized-invalid token" });
     }
 
     const user = await User.findById(decoded.userId).select("-password");
-    console.log("Found user:", user ? user.username : "No user found");
+    console.log("User found:", user ? user.username : "No user found");
     
     if (!user) {
       return res.status(401).json({ message: "Unauthorized- user not found" }); // If the user is not found

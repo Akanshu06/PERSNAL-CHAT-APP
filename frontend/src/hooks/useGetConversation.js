@@ -19,14 +19,24 @@ const useGetConversations = () => {
 					credentials: 'include'
 				});
 				const data = await res.json();
-			
+				
+				console.log("API Response:", data);
 				
 				if (data.error) {
 					throw new Error(data.error);
 				}
-				setConversations(data);
+				
+				// Ensure data is an array
+				if (Array.isArray(data)) {
+					setConversations(data);
+				} else {
+					console.error("Expected array but got:", typeof data, data);
+					setConversations([]);
+				}
 			} catch (error) {
+				console.error("Error fetching conversations:", error);
 				toast.error(error.message);
+				setConversations([]); // Set empty array on error
 			} finally {
 				setLoading(false);
 			}

@@ -2,15 +2,15 @@ import express from "express";
 import dotenv from "dotenv";
 import cookieParser from "cookie-parser";
 import cors from "cors";
-import { app, server } from "./socket/socket.js";
 
 dotenv.config();
+
+import { app, server } from "./socket/socket.js";
 
 // Apply middleware in correct order
 const allowedOrigins = [
   "https://persnal-chat-app.vercel.app",
   "http://localhost:3000",
-  "https://persnal-chat-app.onrender.com"
 ];
 
 app.use(
