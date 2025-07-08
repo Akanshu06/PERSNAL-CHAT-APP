@@ -61,6 +61,11 @@ export const signup = async (req, res) => {
 export const login = async (req, res) => {
   try {
     const { username, password } = req.body;
+    
+    if (!username || !password) {
+      return res.status(400).json({ error: "Username and password are required" });
+    }
+    
     const user = await User.findOne({ username });
 
     const passwordCheck = await bcrypt.compare(password, user?.password || "");
@@ -77,6 +82,7 @@ export const login = async (req, res) => {
       profilePic: user.profilePic,
     });
   } catch (error) {
+    console.error("Login error:", error);
     return res.status(500).json({ error: error.message });
   }
 };
