@@ -1,26 +1,26 @@
 import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react";
 
-export default defineConfig(() => {
-  const backendUrl = process.env.VITE_API_URL;
-
+export default defineConfig(({ mode }) => {
+  const isDev = mode === 'development';
+  
   return {
     plugins: [react()],
     server: {
       port: 3000,
-      proxy: {
+      proxy: isDev ? {
         "/api": {
-          target: backendUrl,
+          target: "http://localhost:5000",
           changeOrigin: true,
           secure: false,
         },
         "/socket.io/": {
-          target: backendUrl,
+          target: "http://localhost:5000",
           changeOrigin: true,
           secure: false,
           ws: true,
         },
-      },
+      } : undefined,
     },
   };
 });
